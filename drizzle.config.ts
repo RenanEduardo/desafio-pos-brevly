@@ -6,6 +6,6 @@ export default {
 		url: env.DATABASE_URL,
 	},
 	dialect: 'postgresql',
-	schema: 'src/infra/db/schemas/*',
+	schema: 'src/infra/db/schema/*',
 	out: 'src/infra/db/migrations',
 } satisfies Config

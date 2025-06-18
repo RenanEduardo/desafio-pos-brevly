@@ -1,7 +1,3 @@
-// import { InvalidaFileSize } from '@/app/usecases/errors/invalid-file-size'
-// import { MissingFile } from '@/app/usecases/errors/missing-file'
-// import { uploadImage } from '@/app/usecases/upload-image'
-// import { isRight, unwrapEither } from '@/shared/either'
 import { createShortLink } from '@/app/usecases/create-short-link'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
@@ -29,7 +25,7 @@ export const createLinkRoute: FastifyPluginAsyncZod = async (server) => {
 			const { url, alias } = request.body
 
 			// Criar o link curto
-			const result = createShortLink({ url, alias })
+			const result = await createShortLink({ url, alias })
 
 			if (result)
 				// Retornar o link curto criado

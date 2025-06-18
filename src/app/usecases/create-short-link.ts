@@ -1,3 +1,5 @@
+import { db, pg } from '@/infra/db'
+import { schema } from '@/infra/db/schema'
 import { z } from 'zod'
 
 const createLinkInput = z.object({
@@ -5,14 +7,22 @@ const createLinkInput = z.object({
 	alias: z.string(),
 })
 
+const BREVLY_URL = 'https://brev.ly'
+
 type CreateLinkInput = z.input<typeof createLinkInput>
 
-export function createShortLink(input: CreateLinkInput): {
-	shortLink: string
-	accessCount: number
-} {
-	const { alias } = createLinkInput.parse(input)
-	const shortLink = `https://brev.ly/${alias}`
+export async function createShortLink(
+	input: CreateLinkInput
+): Promise<{ shortLink: string; accessCount: number }> {
+	const { url, alias } = createLinkInput.parse(input)
+	const shortLink = `${BREVLY_URL}/${alias}`
+
+	await db.insert(schema.shortlinks).values({
+		originalUrl: url,
+		shortenedUrl: shortLink,
+		accessCount: 0,
+		createdAt: new Date(),
+	})
 
 	return { shortLink, accessCount: 0 }
 }
