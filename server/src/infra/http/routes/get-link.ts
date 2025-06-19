@@ -7,7 +7,7 @@ import { z } from "zod";
 export const getLinkRoute: FastifyPluginAsyncZod = async (server) => {
  server.get('/links/:shortlink',{
   schema: {
-   summary: 'Get a short link',
+   summary: 'Get original URL for given alias',
    params: z.object({
     shortlink: z.string().describe('The alias of the short link to retrieve'),
    }),
