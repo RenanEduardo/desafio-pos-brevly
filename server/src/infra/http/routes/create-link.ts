@@ -1,4 +1,5 @@
 import { createShortLink } from '@/app/usecases/create-short-link'
+import { AlreadyExistsError } from '@/app/usecases/errors'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
@@ -21,16 +22,13 @@ export const createLinkRoute: FastifyPluginAsyncZod = async (server) => {
 			},
 		},
 		async (request, reply) => {
-			// Pegar os dados do corpo da requisição
 			const { url, alias } = request.body
 
-			// Criar o link curto
 			const result = await createShortLink({ url, alias })
 
-			if (result instanceof Error) {
+			if (result instanceof AlreadyExistsError) {
 				return reply.status(409).send({ message: result.message })
 			}
-			// Retornar o link curto criado
 			return reply
 				.status(201)
 				.send({ shortLink: result.shortLink, accessCount: result.accessCount })
