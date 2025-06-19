@@ -27,11 +27,13 @@ export const createLinkRoute: FastifyPluginAsyncZod = async (server) => {
 			// Criar o link curto
 			const result = await createShortLink({ url, alias })
 
-			if (result)
-				// Retornar o link curto criado
-				return reply
-					.status(201)
-					.send({ shortLink: result.shortLink, accessCount: result.accessCount })
+			if (result instanceof Error) {
+				return reply.status(409).send({ message: result.message })
+			}
+			// Retornar o link curto criado
+			return reply
+				.status(201)
+				.send({ shortLink: result.shortLink, accessCount: result.accessCount })
 		}
 	)
 }
