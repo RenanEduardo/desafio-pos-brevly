@@ -1,7 +1,8 @@
-import { db, pg } from '@/infra/db'
+import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schema'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { AlreadyExistsError } from './errors'
 
 const createLinkInput = z.object({
 	url: z.string().url(),
@@ -14,7 +15,7 @@ type CreateLinkInput = z.input<typeof createLinkInput>
 
 export async function createShortLink(
 	input: CreateLinkInput
-): Promise<{ shortLink: string; accessCount: number } | Error> {
+): Promise<{ shortLink: string; accessCount: number } | AlreadyExistsError> {
 	const { url, alias } = createLinkInput.parse(input)
 	const shortLink = `${BREVLY_URL}/${alias}`
 
@@ -32,5 +33,5 @@ export async function createShortLink(
 		return { shortLink, accessCount: 0 }
 	}
 
-	return new Error('Short link already exists')
+	return new AlreadyExistsError(`Short link ${shortLink} already exists`)
 }
