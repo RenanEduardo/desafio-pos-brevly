@@ -20,7 +20,7 @@ export const getLinksRoute: FastifyPluginAsyncZod = async (server) => {
    },
   }
  }, async (_request, reply) => {
-  
+ 
   const result = await getAllLinks()
   return reply.status(200).send({links: result});
  })

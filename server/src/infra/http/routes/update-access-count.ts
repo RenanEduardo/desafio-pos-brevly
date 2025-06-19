@@ -1,20 +1,22 @@
 import { NotFoundError } from "@/app/usecases/errors";
-import { getOriginalLink } from "@/app/usecases/get-original-link";
+import { updateAccessCount } from "@/app/usecases/update-access-count";
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 
 
-export const getLinkRoute: FastifyPluginAsyncZod = async (server) => {
- server.get('/links/:shortlink',{
+
+
+export const updateAccessCountRoute: FastifyPluginAsyncZod = async (server) => {
+ server.patch('/links/:shortlink/access-count', {
   schema: {
-   summary: 'Get original URL for given alias',
+   summary: 'Update access count for a short link',
    params: z.object({
-    shortlink: z.string().describe('The alias of the short link to retrieve'),
+    shortlink: z.string().describe('The alias of the short link to update'),
    }),
    response: {
     200: z.object({
-     originalUrl: z.string().url().describe('The original URL for the short link'),
-    }).describe('Short link retrieved successfully'),
+     accessCount: z.number(),
+    }).describe('Access count updated successfully'),
     404: z.object({ message: z.string() }).describe('Short link not found'),
     400: z.object({ message: z.string() }).describe('Short link alias is required'),
    },
@@ -24,14 +26,14 @@ export const getLinkRoute: FastifyPluginAsyncZod = async (server) => {
 
   if (!shortlink) {
    return reply.status(400).send({ message: 'Short link alias is required' });
-  } 
-
-
-
-  const result = await getOriginalLink(shortlink);
-  if(result instanceof NotFoundError) {
-   return reply.status(404).send({ message: result.message });
   }
-  return reply.status(200).send({originalUrl: result});
+
+  const result = await updateAccessCount(shortlink);
+  if (result instanceof NotFoundError) {
+   return reply.status(404).send({ message: result.message });
+
+  }
+
+  return reply.status(200).send({ accessCount: result.accessCount }); 
  })
 }
