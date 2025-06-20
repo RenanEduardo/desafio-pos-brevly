@@ -1,6 +1,6 @@
 import { NotFoundError } from "@/app/usecases/errors";
 import { updateAccessCount } from "@/app/usecases/update-access-count";
-import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 
 
