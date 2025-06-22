@@ -3,13 +3,12 @@ import { schema } from '@/infra/db/schema'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { AlreadyExistsError } from './errors'
+import { BREVLY_LINK } from '@/constants'
 
 const createLinkInput = z.object({
 	url: z.string().url(),
 	alias: z.string(),
 })
-
-const BREVLY_URL = 'https://brev.ly'
 
 type CreateLinkInput = z.input<typeof createLinkInput>
 
@@ -17,7 +16,7 @@ export async function createShortLink(
 	input: CreateLinkInput
 ): Promise<{ shortLink: string; accessCount: number } | AlreadyExistsError> {
 	const { url, alias } = createLinkInput.parse(input)
-	const shortLink = `${BREVLY_URL}/${alias}`
+	const shortLink = `${BREVLY_LINK}${alias}`
 
 	const result = await db.query.shortlinks.findFirst({
 		where: eq(schema.shortlinks.shortenedUrl, shortLink),

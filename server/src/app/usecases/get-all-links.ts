@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { NotFoundError } from "./errors";
 import { db } from "@/infra/db";
 
 

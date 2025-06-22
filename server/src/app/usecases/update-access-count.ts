@@ -3,6 +3,7 @@ import { NotFoundError } from "./errors";
 import { db } from "@/infra/db";
 import { schema } from "@/infra/db/schema";
 import { eq, sql } from "drizzle-orm";
+import { BREVLY_LINK } from "@/constants";
 
 const updateAccessCountInput = z.string()
 
@@ -10,7 +11,7 @@ type UpdateAccessCountInput = z.infer<typeof updateAccessCountInput>;
 
 export const updateAccessCount = async (alias: UpdateAccessCountInput): Promise<{accessCount: number} | NotFoundError> => {
 
- const shortLink = `https://brev.ly/${alias}`
+ const shortLink = `${BREVLY_LINK}${alias}`
 
  const result = await 
   db.update(schema.shortlinks)

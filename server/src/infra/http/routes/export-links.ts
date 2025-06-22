@@ -17,7 +17,7 @@ export const exportLinksRoute: FastifyPluginAsyncZod = async (server) => {
    }
 
   },
-  async (request, reply) => {
+  async (_request, reply) => {
 
    const result = await exportLinks()
 

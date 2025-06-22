@@ -3,13 +3,14 @@ import { schema } from "@/infra/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { NotFoundError } from "./errors";
+import { BREVLY_LINK } from "@/constants";
 
 
 const deleteShortLinkInput = z.string()
 type DeleteShortLinkInput = z.input<typeof deleteShortLinkInput>
 
 export async function deleteShortLink(alias: DeleteShortLinkInput): Promise<void> {
-  const shortLink = `https://brev.ly/${alias}`
+  const shortLink = `${BREVLY_LINK}${alias}`
 
   const result = await db.query.shortlinks.findFirst({
     where: eq(schema.shortlinks.shortenedUrl, shortLink),
