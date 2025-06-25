@@ -1,6 +1,7 @@
 import { CopyIcon } from '@phosphor-icons/react';
 import brevlyLogo from '../assets/Logo.svg'
 import { Button } from './components/ui/button';
+import { Input } from './components/ui/input';
 
 export function App() {
 
@@ -17,17 +18,12 @@ export function App() {
       <div className="w-full md:w-1/3 md:mb-0 bg-gray-100 rounded-lg">
         <form className="bg-white p-4 shadow rounded space-y-4">
           <div>
-            <label className="block text-sm font-medium">Link original</label>
-            <input
-              type="text"
-              className="mt-1 w-full px-3 py-2 border rounded outline-none focus:ring-2 focus:ring-blue-500"
+            <Input id='original-link'type="text" label="Link Original" placeholder='link original'
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Link encurtado</label>
-            <input
-              type="email"
-              className="mt-1 w-full px-3 py-2 border rounded outline-none focus:ring-2 focus:ring-blue-500"
+            <Input id='shortened-link'type="text" label="Link Encurtado"
+            
             />
           </div>
           <Button

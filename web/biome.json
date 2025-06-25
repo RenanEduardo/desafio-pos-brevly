@@ -7,16 +7,12 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab",
 		"indentWidth": 4,
 		"lineWidth": 100
-	},
-	"organizeImports": {
-		"enabled": true
 	},
 	"linter": {
 		"enabled": true,
