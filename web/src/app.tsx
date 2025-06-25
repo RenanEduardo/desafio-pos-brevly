@@ -1,4 +1,6 @@
+import { CopyIcon } from '@phosphor-icons/react';
 import brevlyLogo from '../assets/Logo.svg'
+import { Button } from './components/ui/button';
 
 export function App() {
 
@@ -28,12 +30,18 @@ export function App() {
               className="mt-1 w-full px-3 py-2 border rounded outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          <Button
           >
             Salvar link
-          </button>
+          </Button>
+          <Button size="secondary">
+            <CopyIcon size={16}/>
+            Copiar
+          </Button>
+          <br />
+          <Button size="icon" >
+            <CopyIcon size={16}/>
+          </Button>
         </form>
       </div>
 
