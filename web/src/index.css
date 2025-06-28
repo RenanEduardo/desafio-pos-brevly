@@ -32,4 +32,5 @@
 
 body {
  @apply bg-gray-200;
+ @apply font-brevly;
 }

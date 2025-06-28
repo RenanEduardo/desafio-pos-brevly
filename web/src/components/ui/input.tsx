@@ -14,7 +14,7 @@ export function Input(props: InputProps) {
 	return (
 		<div className="flex flex-col gap-2 group" data-error={error}>
 			<label htmlFor={id} className="flex flex-col items-start gap-2 ">
-				<span className="font-brevly text-xs font-normal uppercase text-gray-500 has-[input:focus]:text-blue-base has-[input:focus]:font-bold group-data-[error=true]:text-danger">
+				<span className="text-xs font-normal uppercase text-gray-500 has-[input:focus]:text-blue-base has-[input:focus]:font-bold group-data-[error=true]:text-danger">
 					{" "}
 					{label}
 				</span>
@@ -25,7 +25,7 @@ export function Input(props: InputProps) {
 				/>
 			</label>
 			{error && (
-				<span className="inline-flex gap-2 font-brevly items-center text-sm text-gray-500 font-normal">
+				<span className="inline-flex gap-2 items-center text-sm text-gray-500 font-normal">
 					<WarningIcon size={16} className="text-danger" />
 					{errorMsg}
 				</span>
