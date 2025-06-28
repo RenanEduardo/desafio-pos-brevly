@@ -1,6 +1,6 @@
 import { NotFoundError } from "@/app/usecases/errors";
 import { getOriginalLink } from "@/app/usecases/get-original-link";
-import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 
 

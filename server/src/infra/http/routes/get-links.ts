@@ -1,5 +1,5 @@
 import { getAllLinks } from "@/app/usecases/get-all-links";
-import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 
 
