@@ -19,6 +19,7 @@ export const ShortLinkSchema = z.object({
 export type ShortLink = z.infer<typeof ShortLinkSchema>;
 
 export const AddLinkResponseSchema = z.object({
+  id: z.string(),
   shortLink: z.string(),
   accessCount: z.number()
 })
