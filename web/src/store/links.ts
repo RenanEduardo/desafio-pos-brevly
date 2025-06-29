@@ -20,7 +20,7 @@ type StoreActions = {
 type ToastState = {
 	 title: string
 		message: string
-		type: 'success' | 'error' | 'info'
+		type: 'error' | 'info'
 		isOpen: boolean
 }
 
