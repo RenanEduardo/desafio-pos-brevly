@@ -4,7 +4,7 @@ import { db } from "@/infra/db";
 
 const getAllLinksOutput = z.object({
  id: z.string(),
- shortlink: z.string(),
+ shortLink: z.string(),
  originalUrl: z.string().url(),
  accessCount: z.number()
 })
@@ -17,7 +17,7 @@ export async function getAllLinks(): Promise<Array<GetAllLinksOutput>> {
 
  return result.map(link => ({
   id: link.id,
-  shortlink: link.shortenedUrl,
+  shortLink: link.shortenedUrl,
   originalUrl: link.originalUrl,
   accessCount: link.accessCount
  }))
