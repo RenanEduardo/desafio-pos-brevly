@@ -1,8 +1,9 @@
-import { Button } from "../ui/button";
 import { useState } from "react";
-import { Input } from "../ui/input";
+import { AddLinkRepositoryHttp } from "../../infra/add-link-repository-http";
+import { useLinksStore } from "../../store/links";
 import { AddLinkUseCase } from "../../usecases/add-link-usecase/add-link";
-import { AddLinkRepositoryHttp } from "../../infra/add-link-repository";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export function AddNewLink() {
 	const [originalLinkInput, setOriginalLinkInput] = useState("");
@@ -12,7 +13,7 @@ export function AddNewLink() {
 	});
 	const [aliasInput, setAliasInput] = useState("");
 	const [aliasError, setAliasError] = useState({ error: false, message: "" });
-
+	const baseUrl = useLinksStore((state) => state.baseUrl);
 	function isValidInput(input: string): boolean {
 		if (input.trim() === "") return false;
 		return true;
@@ -40,9 +41,7 @@ export function AddNewLink() {
 				? originalLinkInput
 				: `https://${originalLinkInput}`;
 
-		const response = await new AddLinkUseCase(
-			new AddLinkRepositoryHttp(),
-		).execute({
+		await new AddLinkUseCase(new AddLinkRepositoryHttp(baseUrl)).execute({
 			url,
 			alias: aliasInput,
 		});
@@ -53,7 +52,6 @@ export function AddNewLink() {
 			<span className="text-lg font-bold text-gray-600">Novo Link</span>
 			<div>
 				<Input
-					id="original-link"
 					type="text"
 					label="Link Original"
 					placeholder="www.exemplo.com"
@@ -69,7 +67,6 @@ export function AddNewLink() {
 			</div>
 			<div>
 				<Input
-					id="shortened-link"
 					type="text"
 					label="Link Encurtado"
 					placeholder="brev.ly/"

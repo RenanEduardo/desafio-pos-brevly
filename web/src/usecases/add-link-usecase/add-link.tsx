@@ -1,5 +1,5 @@
-import type { AddLinkRepository } from "../../infra/add-link-repository";
-import { LinkSchema, type Link } from "../interfaces";
+import type { AddLinkRepository } from "../../infra/add-link-repository-http";
+import { type Link, LinkSchema } from "../interfaces";
 
 export class AddLinkUseCase {
 	private readonly addLinkRepository: AddLinkRepository;
@@ -12,7 +12,7 @@ export class AddLinkUseCase {
 		try {
 			LinkSchema.parse(link);
 			await this.addLinkRepository.add(link);
-		} catch (error) {
+		} catch (_error) {
 			throw new Error("Failed to add link");
 		}
 	}
