@@ -15,7 +15,7 @@ export const createLinkRoute: FastifyPluginAsyncZod = async (server) => {
 				}),
 				response: {
 					201: z
-						.object({ shortLink: z.string(), accessCount: z.number() })
+						.object({ id:z.string(), shortLink: z.string(), accessCount: z.number() })
 						.describe('Short link created'),
 					409: z.object({ message: z.string() }).describe('Short link already exists'),
 				},
@@ -31,7 +31,7 @@ export const createLinkRoute: FastifyPluginAsyncZod = async (server) => {
 			}
 			return reply
 				.status(201)
-				.send({ shortLink: result.shortLink, accessCount: result.accessCount })
+				.send({ id:result.id ,shortLink: result.shortLink, accessCount: result.accessCount })
 		}
 	)
 }

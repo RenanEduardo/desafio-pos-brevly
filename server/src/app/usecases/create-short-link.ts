@@ -14,7 +14,7 @@ type CreateLinkInput = z.input<typeof createLinkInput>
 
 export async function createShortLink(
 	input: CreateLinkInput
-): Promise<{ shortLink: string; accessCount: number } | AlreadyExistsError> {
+): Promise<{ id: string, shortLink: string; accessCount: number } | AlreadyExistsError> {
 	const { url, alias } = createLinkInput.parse(input)
 	const shortLink = `${BREVLY_LINK}${alias}`
 
@@ -23,13 +23,20 @@ export async function createShortLink(
 	})
 
 	if (!result) {
-		await db.insert(schema.shortlinks).values({
+		const inserted = await db.insert(schema.shortlinks).values({
 			originalUrl: url,
 			shortenedUrl: shortLink,
 			accessCount: 0,
 			createdAt: new Date(),
-		})
-		return { shortLink, accessCount: 0 }
+		}).returning({ id: schema.shortlinks.id })
+
+		const id = inserted[0]?.id
+
+		if (!id) {
+			throw new Error('Failed to create short link')
+		}
+
+		return { id, shortLink, accessCount: 0 }
 	}
 
 	return new AlreadyExistsError(`Short link ${shortLink} already exists`)
