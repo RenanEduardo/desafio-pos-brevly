@@ -1,14 +1,19 @@
 import { CopyIcon, TrashIcon } from '@phosphor-icons/react'
+import * as AlertDialog from '@radix-ui/react-alert-dialog'
+import { DeleteLinkRepositoryHttp } from '../../../infra/delete-link-repository-http'
 import { useLinksStore } from '../../../store/links'
+import { DeleteLinkUseCase } from '../../../usecases/delete-link-usecase/delete-link'
 import type { ShortLink } from '../../../usecases/interfaces'
+import { extractAliasFromUrl } from '../../../util'
 import { Button } from '../../ui/button'
+import { DeleteDialog } from './delete-dialog'
 
 type ShortLinkProps = {
 	link: ShortLink
 }
 export function ListItem({ link }: ShortLinkProps) {
 	const { originalUrl, shortLink, accessCount } = link
-	const { setToast, setToastOpen } = useLinksStore((state) => state)
+	const { setToast, setToastOpen, baseUrl, removeLink, addLink } = useLinksStore((state) => state)
 
 	function copyToClipboard() {
 		navigator.clipboard.writeText(shortLink)
@@ -19,6 +24,24 @@ export function ListItem({ link }: ShortLinkProps) {
 			isOpen: false,
 		})
 		setToastOpen(true)
+	}
+
+	async function handleDeleteLink() {
+		const linkCopy = { ...link }
+		removeLink(shortLink)
+		const alias = extractAliasFromUrl(shortLink)
+		try {
+			await new DeleteLinkUseCase(new DeleteLinkRepositoryHttp(baseUrl)).execute(alias)
+		} catch (error) {
+			setToast({
+				title: 'Error',
+				message: 'Failed to delete the link. Please try again.',
+				type: 'error',
+				isOpen: false,
+			})
+			setToastOpen(true)
+			addLink(linkCopy)
+		}
 	}
 
 	return (
@@ -33,9 +56,14 @@ export function ListItem({ link }: ShortLinkProps) {
 					<Button size="icon" onClick={copyToClipboard}>
 						<CopyIcon size={16} />
 					</Button>
-					<Button size="icon">
-						<TrashIcon size={16} />
-					</Button>
+					<AlertDialog.Root>
+						<AlertDialog.Trigger asChild>
+							<Button size="icon">
+								<TrashIcon size={16} />
+							</Button>
+						</AlertDialog.Trigger>
+						<DeleteDialog handleConfirmation={handleDeleteLink} />
+					</AlertDialog.Root>
 				</div>
 			</div>
 		</div>
