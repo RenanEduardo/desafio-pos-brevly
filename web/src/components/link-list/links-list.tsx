@@ -53,7 +53,7 @@ export function LinksList() {
 					Baixar CSV
 				</Button>
 			</div>
-			<div>
+			<div className="max-h-[23rem] overflow-auto scrollbar scrollbar-thumb-blue-base scrollbar-track-gray-100">
 				{links.map((link) => (
 					<ListItem key={link.id} link={link} />
 				))}
