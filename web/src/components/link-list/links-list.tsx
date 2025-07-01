@@ -7,6 +7,7 @@ import { ExportLinksUseCase } from '../../usecases/export-links/export-links'
 import { ListLinksUseCase } from '../../usecases/list-links-usecase/list-links'
 import { downloadUrl } from '../../util'
 import { Button } from '../ui/button'
+import { EmptyList } from './components/empty-list'
 import { ListItem } from './components/list-item'
 
 export function LinksList() {
@@ -45,7 +46,7 @@ export function LinksList() {
 	}
 
 	return (
-		<div className="w-[36.25rem] bg-gray-100 rounded-lg p-8">
+		<div className="w-[36.25rem] bg-gray-100 rounded-lg p-8 h-fit">
 			<div className="w-full inline-flex items-center justify-between mb-6">
 				<span className="text-lg text-gray-600 font-bold">Meus Links</span>
 				<Button size="secondary" onClick={handleDownloadCSV}>
@@ -53,11 +54,15 @@ export function LinksList() {
 					Baixar CSV
 				</Button>
 			</div>
-			<div className="max-h-[23rem] overflow-auto scrollbar scrollbar-thumb-blue-base scrollbar-track-gray-100">
-				{links.map((link) => (
-					<ListItem key={link.id} link={link} />
-				))}
-			</div>
+			{links.length === 0 ? (
+				<EmptyList />
+			) : (
+				<div className="max-h-[23rem] overflow-auto scrollbar scrollbar-thumb-blue-base scrollbar-track-gray-100">
+					{links.map((link) => (
+						<ListItem key={link.id} link={link} />
+					))}
+				</div>
+			)}
 		</div>
 	)
 }
