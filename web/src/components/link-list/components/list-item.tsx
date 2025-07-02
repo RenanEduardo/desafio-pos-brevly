@@ -1,5 +1,6 @@
 import { CopyIcon, TrashIcon } from '@phosphor-icons/react'
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
+import { Link } from 'react-router-dom'
 import { DeleteLinkRepositoryHttp } from '../../../infra/delete-link-repository-http'
 import { useLinksStore } from '../../../store/links'
 import { DeleteLinkUseCase } from '../../../usecases/delete-link-usecase/delete-link'
@@ -47,7 +48,12 @@ export function ListItem({ link }: ShortLinkProps) {
 	return (
 		<div className="flex justify-between border-t border-gray-200 py-4 gap-5">
 			<div className="flex flex-col gap-1 max-w-[70%]">
-				<span className="text-md font-semibold text-blue-base truncate">{shortLink}</span>
+				<Link
+					to={`/${extractAliasFromUrl(shortLink)}`}
+					className="text-md font-semibold text-blue-base truncate hover:underline"
+				>
+					{shortLink}
+				</Link>
 				<span className="text-sm font-normal text-gray-500 truncate">{originalUrl}</span>
 			</div>
 			<div className="flex flex-row items-center gap-5">

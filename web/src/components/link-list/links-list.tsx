@@ -1,5 +1,5 @@
 import { DownloadIcon } from '@phosphor-icons/react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ExportLinksRepositoryHttp } from '../../infra/export-links-repository-http'
 import { ListLinksRepositoryHttp } from '../../infra/list-links-repository-http'
 import { useLinksStore } from '../../store/links'
@@ -12,14 +12,17 @@ import { ListItem } from './components/list-item'
 
 export function LinksList() {
 	const { baseUrl, setLinks, links, setToast, setToastOpen } = useLinksStore((state) => state)
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		async function fetchLinks() {
 			try {
+				setIsLoading(true)
 				const links = await new ListLinksUseCase(
 					new ListLinksRepositoryHttp(baseUrl)
 				).execute()
 				setLinks(links)
+				setIsLoading(false)
 			} catch (error) {
 				console.error('Error fetching links:', error)
 			}
@@ -55,7 +58,7 @@ export function LinksList() {
 				</Button>
 			</div>
 			{links.length === 0 ? (
-				<EmptyList />
+				<EmptyList isLoading={isLoading} />
 			) : (
 				<div className="max-h-[23rem] overflow-auto scrollbar scrollbar-thumb-blue-base scrollbar-track-gray-100">
 					{links.map((link) => (

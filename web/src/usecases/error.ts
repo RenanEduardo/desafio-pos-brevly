@@ -6,3 +6,10 @@ export class LinkError extends Error {
   this.name = 'LinkError';
  }
 }
+
+export class NotFoundError extends LinkError {
+ constructor(message: string = 'Link not found') {
+  super(message);
+  this.name = 'NotFoundError';
+ }
+}

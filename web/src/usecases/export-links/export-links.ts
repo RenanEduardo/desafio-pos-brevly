@@ -1,5 +1,4 @@
 import type { ExportLinksRepository } from "../../infra/export-links-repository-http";
-import { LinkError } from "../error";
 import type { ExportLinksResponse } from "../interfaces";
 
 
@@ -12,9 +11,6 @@ export class ExportLinksUseCase {
 
  async execute(): Promise<ExportLinksResponse | Error> {
    const response = await this.exportLinksRepository.export();
-   if (response instanceof LinkError) {
-    return response
-   }
    return response;
  }
 }
