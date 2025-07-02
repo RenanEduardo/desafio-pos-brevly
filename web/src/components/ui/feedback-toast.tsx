@@ -24,7 +24,7 @@ type ToastProps = VariantProps<typeof toastVariants> & {
 	setOpen: (open: boolean) => void
 }
 export function FeedbackToast(props: ToastProps) {
-	const { title, message, duration = Infinity, setOpen, isOpen } = props
+	const { title, message, duration = 3000, setOpen, isOpen } = props
 
 	return (
 		<Toast.Provider duration={duration ? duration : 3000}>
