@@ -2,9 +2,11 @@ import { CopyIcon, TrashIcon } from '@phosphor-icons/react'
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import { Link } from 'react-router-dom'
 import { DeleteLinkRepositoryHttp } from '../../../infra/delete-link-repository-http'
+import { UpdateAccessCountRepositoryHttp } from '../../../infra/update-access-count-repository-http'
 import { useLinksStore } from '../../../store/links'
 import { DeleteLinkUseCase } from '../../../usecases/delete-link-usecase/delete-link'
 import type { ShortLink } from '../../../usecases/interfaces'
+import { UpdateAccessCountUseCase } from '../../../usecases/update-access-count-usecase/update-access-count-usecase'
 import { extractAliasFromUrl } from '../../../util'
 import { Button } from '../../ui/button'
 import { DeleteDialog } from './delete-dialog'
@@ -45,10 +47,27 @@ export function ListItem({ link }: ShortLinkProps) {
 		}
 	}
 
+	async function handleNavigate() {
+		try {
+			await new UpdateAccessCountUseCase(
+				new UpdateAccessCountRepositoryHttp(baseUrl)
+			).execute(extractAliasFromUrl(shortLink))
+		} catch (_error) {
+			setToast({
+				title: 'Error',
+				message: 'Failed to update access count. Please try again.',
+				type: 'error',
+				isOpen: false,
+			})
+			setToastOpen(true)
+		}
+	}
+
 	return (
 		<div className="flex justify-between border-t border-gray-200 py-4 gap-5">
 			<div className="flex flex-col gap-1 max-w-[70%]">
 				<Link
+					onClick={handleNavigate}
 					to={`/${extractAliasFromUrl(shortLink)}`}
 					className="text-md font-semibold text-blue-base truncate hover:underline"
 				>
