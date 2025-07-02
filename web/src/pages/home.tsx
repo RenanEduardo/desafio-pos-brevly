@@ -1,14 +1,14 @@
-import brevlyLogo from '../../assets/Logo.svg'
 import { AddNewLink } from '../components/add-link/add-new-link'
 import { LinksList } from '../components/link-list/links-list'
 import { FeedbackToast } from '../components/ui/feedback-toast'
+import { Header } from '../components/ui/header'
 import { useLinksStore } from '../store/links'
 
 export function Home() {
 	const { toast, setToastOpen } = useLinksStore((state) => state)
 
 	return (
-		<div className="min-h-screen w-full mx-auto flex flex-col items-center justify-center">
+		<div className="min-h-screen flex md:items-center md:justify-center px-3 py-6 md:py-0">
 			<FeedbackToast
 				setOpen={setToastOpen}
 				isOpen={toast.isOpen}
@@ -16,11 +16,12 @@ export function Home() {
 				message={toast.message}
 				type={toast.type}
 			/>
-			<div className="flex flex-col px-3 md:px-0 gap-8 items-center">
-				<div className="w-full float-left">
-					<img className="h-[25px] w-[96px]" src={brevlyLogo} alt="Brevly logo" />
-				</div>
-				<div className="flex flex-row gap-5">
+			<div className="grid gap-6 w-full md:max-w-screen-lg">
+				{/* Header */}
+				<Header />
+
+				{/* Content Area */}
+				<div className="flex flex-col md:flex-row md:items-start md:gap-6 w-full gap-3">
 					<AddNewLink />
 					<LinksList />
 				</div>

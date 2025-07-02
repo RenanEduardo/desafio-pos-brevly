@@ -6,11 +6,13 @@ import { RedirectPage } from './pages/redirect-page'
 export function App() {
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/:shortLink" element={<RedirectPage />} />
-				<Route path="/404" element={<NotFound />} />
-			</Routes>
+			<div>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/:shortLink" element={<RedirectPage />} />
+					<Route path="/404" element={<NotFound />} />
+				</Routes>
+			</div>
 		</BrowserRouter>
 	)
 }

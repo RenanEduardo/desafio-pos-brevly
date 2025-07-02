@@ -24,6 +24,9 @@ export function LinksList() {
 				setLinks(links)
 				setIsLoading(false)
 			} catch (error) {
+				setLinks([])
+				setIsLoading(false)
+
 				console.error('Error fetching links:', error)
 			}
 		}
@@ -49,10 +52,10 @@ export function LinksList() {
 	}
 
 	return (
-		<div className="w-[36.25rem] bg-gray-100 rounded-lg p-8 h-fit">
+		<div className="sm:w-[36.25rem] w-full bg-gray-100 rounded-lg p-8 h-fit">
 			<div className="w-full inline-flex items-center justify-between mb-6">
 				<span className="text-lg text-gray-600 font-bold">Meus Links</span>
-				<Button size="secondary" onClick={handleDownloadCSV}>
+				<Button size="secondary" onClick={handleDownloadCSV} disabled={!links.length}>
 					<DownloadIcon size={16} />
 					Baixar CSV
 				</Button>

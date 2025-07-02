@@ -39,7 +39,7 @@ export function RedirectPage() {
 		redirectToOriginalUrl()
 	}, [baseUrl, navigate, setToast, setToastOpen, location.pathname])
 	return (
-		<div className="min-h-screen w-full mx-auto flex flex-col items-center justify-center">
+		<div className="min-h-screen w-full mx-auto flex flex-col items-center justify-center px-3">
 			<div className="flex flex-col items-center justify-center py-16 px-12 gap-6 rounded-lg bg-gray-100 ">
 				<img className="h-12 w-12" src={brevlyLogoIcon} alt="Brevly logo" />
 				<span className="text-xl font-bold text-center text-gray-600">

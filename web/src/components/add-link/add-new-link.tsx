@@ -78,7 +78,7 @@ export function AddNewLink() {
 	}
 
 	return (
-		<div className="w-[23.75rem] h-fit bg-gray-100 rounded-lg flex flex-col gap-6 p-8">
+		<div className="md:w-[23.75rem] w-full bg-gray-100 rounded-lg flex flex-col gap-6 p-8">
 			<span className="text-lg font-bold text-gray-600">Novo Link</span>
 			<div>
 				<Input

@@ -35,7 +35,7 @@ export function ListItem({ link }: ShortLinkProps) {
 		const alias = extractAliasFromUrl(shortLink)
 		try {
 			await new DeleteLinkUseCase(new DeleteLinkRepositoryHttp(baseUrl)).execute(alias)
-		} catch (error) {
+		} catch (_error) {
 			setToast({
 				title: 'Error',
 				message: 'Failed to delete the link. Please try again.',

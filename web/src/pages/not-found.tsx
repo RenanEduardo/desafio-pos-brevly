@@ -1,8 +1,8 @@
 import NotFoundLogo from '../../assets/404.svg'
 export function NotFound() {
 	return (
-		<div className="min-h-screen w-full mx-auto flex flex-col items-center justify-center">
-			<div className="flex flex-col items-center justify-center text-center gap-6 w-[36.25rem] rounded-lg bg-gray-100 px-12 py-16">
+		<div className="min-h-screen w-full mx-auto flex flex-col items-center justify-center px-3">
+			<div className="flex flex-col items-center justify-center text-center gap-6 md:w-[36.25rem] rounded-lg bg-gray-100 px-12 py-16">
 				<img
 					src={NotFoundLogo}
 					alt="Página não encontrada"
