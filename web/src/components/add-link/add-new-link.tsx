@@ -21,6 +21,7 @@ export function AddNewLink() {
 
 	function isValidInput(input: string): boolean {
 		if (input.trim() === '') return false
+		if (input === '404') return false
 		return true
 	}
 
@@ -28,14 +29,14 @@ export function AddNewLink() {
 		if (!isValidInput(originalLinkInput)) {
 			setOriginalLinkError({
 				error: true,
-				message: 'O link original não pode estar vazio.',
+				message: 'O link encurtado não pode ser um valor inválido.',
 			})
 			return
 		}
 		if (!isValidInput(aliasInput)) {
 			setAliasError({
 				error: true,
-				message: 'O link encurtado não pode estar vazio.',
+				message: 'O link encurtado não pode ser um valor inválido.',
 			})
 			return
 		}
