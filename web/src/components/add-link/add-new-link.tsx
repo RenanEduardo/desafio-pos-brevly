@@ -14,6 +14,7 @@ export function AddNewLink() {
 	})
 	const [aliasInput, setAliasInput] = useState('')
 	const [aliasError, setAliasError] = useState({ error: false, message: '' })
+	const [inProgress, setInProgress] = useState(false)
 
 	const { baseUrl, addLink, updateLink, removeLink, setToast, setToastOpen } = useLinksStore(
 		(state) => state
@@ -40,7 +41,7 @@ export function AddNewLink() {
 			})
 			return
 		}
-
+		setInProgress(true)
 		const url =
 			originalLinkInput.startsWith('http') || originalLinkInput.startsWith('https')
 				? originalLinkInput
@@ -73,6 +74,7 @@ export function AddNewLink() {
 		} else {
 			updateLink(response.shortLink, response)
 		}
+		setInProgress(false)
 	}
 
 	return (
@@ -107,7 +109,9 @@ export function AddNewLink() {
 					errorMsg={aliasError.message}
 				/>
 			</div>
-			<Button onClick={handleAddLink}>Salvar link</Button>
+			<Button onClick={handleAddLink} disabled={inProgress}>
+				Salvar link
+			</Button>
 		</div>
 	)
 }
