@@ -65,7 +65,7 @@ export function ListItem({ link }: ShortLinkProps) {
 
 	return (
 		<div className="flex justify-between border-t border-gray-200 py-4 gap-5">
-			<div className="flex flex-col gap-1 max-w-[70%]">
+			<div className="flex flex-col gap-1 max-w-[130px] md:max-w-[275px]">
 				<Link
 					onClick={increaseAccessCount}
 					to={`/${extractAliasFromUrl(shortLink)}`}
@@ -76,8 +76,10 @@ export function ListItem({ link }: ShortLinkProps) {
 				<span className="text-sm font-normal text-gray-500 truncate">{originalUrl}</span>
 			</div>
 			<div className="flex flex-row items-center gap-5">
-				<span className="text-sm font-normal text-right text-gray-500">{accessCount}</span>
-				<div className="flex flex-row flex-wrap items-center gap-1">
+				<span className="text-sm font-normal text-right text-gray-500">
+					{accessCount} acessos
+				</span>
+				<div className="flex flex-row flex-nowrap items-center gap-1">
 					<Button size="icon" onClick={copyToClipboard}>
 						<CopyIcon size={16} />
 					</Button>
