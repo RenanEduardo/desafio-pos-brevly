@@ -16,9 +16,8 @@ export function AddNewLink() {
 	const [aliasError, setAliasError] = useState({ error: false, message: '' })
 	const [inProgress, setInProgress] = useState(false)
 
-	const { baseUrl, addLink, updateLink, removeLink, setToast, setToastOpen } = useLinksStore(
-		(state) => state
-	)
+	const { brevlyUrl, baseUrl, addLink, updateLink, removeLink, setToast, setToastOpen } =
+		useLinksStore((state) => state)
 
 	function isValidInput(input: string): boolean {
 		if (input.trim() === '') return false
@@ -50,7 +49,7 @@ export function AddNewLink() {
 		const optimisticResponse = {
 			id: 'temp-id', // This will be replaced by the server
 			originalUrl: url,
-			shortLink: `https://brev.ly/${aliasInput}`,
+			shortLink: `${brevlyUrl}${aliasInput}`,
 			accessCount: 0,
 		}
 
