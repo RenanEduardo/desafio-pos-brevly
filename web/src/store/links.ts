@@ -6,6 +6,7 @@ type StoreState = {
 	links: ShortLink[]
 	baseUrl: string
 	toast: ToastState
+	brevlyUrl: string
 }
 
 type StoreActions = {
@@ -39,6 +40,7 @@ export const useLinksStore = create<StoreState & StoreActions>()(devtools((set) 
 					link.shortLink === shortlink ? updatedLink : link
 				),
 			})),
+		brevlyUrl: import.meta.env.VITE_FRONTEND_URL,
 		baseUrl: `${import.meta.env.VITE_BACKEND_URL}/links`,
 		setToast: (toast) => set({ toast }),
 		setToastOpen: (isOpen: boolean) => set((state) => ({
