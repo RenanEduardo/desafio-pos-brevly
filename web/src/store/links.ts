@@ -7,15 +7,17 @@ type StoreState = {
 	baseUrl: string
 	toast: ToastState
 	brevlyUrl: string
+	isLoading: boolean
 }
 
 type StoreActions = {
 	setLinks: (links: ShortLink[]) => void
 	addLink: (link: ShortLink) => void
-	removeLink: (shortlink: string) => void
+	removeLink: (id: string) => void
 	updateLink: (shortlink: string, updatedLink: ShortLink) => void
 	setToast: (toast: ToastState) => void
 	setToastOpen: (isOpen: boolean) => void
+	setIsLoading: (isLoading: boolean) => void
 }
 
 type ToastState = {
@@ -30,9 +32,9 @@ export const useLinksStore = create<StoreState & StoreActions>()(devtools((set) 
 		links: [],
 		setLinks: (links) => set({ links }),
 		addLink: (link) => set((state) => ({ links: [...state.links, link] })),
-		removeLink: (shortlink) =>
+		removeLink: (id) =>
 			set((state) => ({
-				links: state.links.filter((link) => link.shortLink !== shortlink),
+				links: state.links.filter((link) => link.id !== id),
 			})),
 		updateLink: (shortlink, updatedLink) =>
 			set((state) => ({
@@ -49,6 +51,7 @@ export const useLinksStore = create<StoreState & StoreActions>()(devtools((set) 
 				isOpen,
 			}
 		})),
+		setIsLoading: (isLoading) => set({ isLoading }),
 		// Default toast state
 		toast: {
 			title: '',

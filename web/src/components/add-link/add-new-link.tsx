@@ -16,13 +16,28 @@ export function AddNewLink() {
 	const [aliasError, setAliasError] = useState({ error: false, message: '' })
 	const [inProgress, setInProgress] = useState(false)
 
-	const { brevlyUrl, baseUrl, addLink, updateLink, removeLink, setToast, setToastOpen } =
-		useLinksStore((state) => state)
+	const {
+		brevlyUrl,
+		baseUrl,
+		addLink,
+		updateLink,
+		removeLink,
+		setToast,
+		setToastOpen,
+		setIsLoading,
+	} = useLinksStore((state) => state)
 
 	function isValidInput(input: string): boolean {
 		if (input.trim() === '') return false
 		if (input === '404') return false
 		return true
+	}
+
+	function resetInputs() {
+		setOriginalLinkInput('')
+		setAliasInput('')
+		setOriginalLinkError({ error: false, message: '' })
+		setAliasError({ error: false, message: '' })
 	}
 
 	async function handleAddLink() {
@@ -47,32 +62,36 @@ export function AddNewLink() {
 				: `https://${originalLinkInput}`
 
 		const optimisticResponse = {
-			id: 'temp-id', // This will be replaced by the server
+			id: 'temp-id',
 			originalUrl: url,
 			shortLink: `${brevlyUrl}${aliasInput}`,
 			accessCount: 0,
 		}
 
+		setIsLoading(true)
 		addLink(optimisticResponse)
 
-		const response = await new AddLinkUseCase(new AddLinkRepositoryHttp(baseUrl)).execute({
-			url,
-			alias: aliasInput,
-		})
+		resetInputs()
 
-		if (response instanceof LinkError) {
-			setToast({
-				title: 'Error',
-				message: response.message,
-				type: 'error',
-				isOpen: false,
+		try {
+			const response = await new AddLinkUseCase(new AddLinkRepositoryHttp(baseUrl)).execute({
+				url,
+				alias: aliasInput,
 			})
-			setToastOpen(true)
-
-			removeLink(optimisticResponse.shortLink)
-		} else {
 			updateLink(response.shortLink, response)
+		} catch (error) {
+			if (error instanceof LinkError) {
+				setToast({
+					title: 'Error',
+					message: error.message,
+					type: 'error',
+					isOpen: false,
+				})
+				setToastOpen(true)
+				removeLink(optimisticResponse.id)
+			}
 		}
+		setIsLoading(false)
 		setInProgress(false)
 	}
 

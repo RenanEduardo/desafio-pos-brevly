@@ -11,11 +11,7 @@ export class ListLinksUseCase {
 	}
 
 	async execute(): Promise<ShortLink[]> {
-  try {
    const response = await this.listLinkRepository.list();
    return response.links;
-  } catch (_error) {
-   throw new Error("Failed to list links");
-  }
 	}
 }

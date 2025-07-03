@@ -15,7 +15,7 @@ type ShortLinkProps = {
 	link: ShortLink
 }
 export function ListItem({ link }: ShortLinkProps) {
-	const { originalUrl, shortLink, accessCount } = link
+	const { originalUrl, shortLink, accessCount, id } = link
 	const { setToast, setToastOpen, baseUrl, removeLink, addLink } = useLinksStore((state) => state)
 
 	function copyToClipboard() {
@@ -31,7 +31,7 @@ export function ListItem({ link }: ShortLinkProps) {
 
 	async function handleDeleteLink() {
 		const linkCopy = { ...link }
-		removeLink(shortLink)
+		removeLink(id)
 		const alias = extractAliasFromUrl(shortLink)
 		try {
 			await new DeleteLinkUseCase(new DeleteLinkRepositoryHttp(baseUrl)).execute(alias)
@@ -47,7 +47,7 @@ export function ListItem({ link }: ShortLinkProps) {
 		}
 	}
 
-	async function handleNavigate() {
+	async function increaseAccessCount() {
 		try {
 			await new UpdateAccessCountUseCase(
 				new UpdateAccessCountRepositoryHttp(baseUrl)
@@ -67,7 +67,7 @@ export function ListItem({ link }: ShortLinkProps) {
 		<div className="flex justify-between border-t border-gray-200 py-4 gap-5">
 			<div className="flex flex-col gap-1 max-w-[70%]">
 				<Link
-					onClick={handleNavigate}
+					onClick={increaseAccessCount}
 					to={`/${extractAliasFromUrl(shortLink)}`}
 					className="text-md font-semibold text-blue-base truncate hover:underline"
 				>

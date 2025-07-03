@@ -3,7 +3,7 @@ import { LinkError } from '../usecases/error'
 import { type AddLinkResponse, AddLinkResponseSchema, type Link } from '../usecases/interfaces'
 
 export interface AddLinkRepository {
-	add(link: Link): Promise<AddLinkResponse |	LinkError>
+	add(link: Link): Promise<AddLinkResponse>
 }
 
 export class AddLinkRepositoryHttp implements AddLinkRepository {
@@ -13,7 +13,7 @@ export class AddLinkRepositoryHttp implements AddLinkRepository {
 		this.baseUrl = baseUrl
 	}
 
-	async add(link: Link): Promise<AddLinkResponse | LinkError> {
+	async add(link: Link): Promise<AddLinkResponse> {
 
 		try {
 			const response = await axios.post(this.baseUrl, link)
@@ -26,9 +26,9 @@ export class AddLinkRepositoryHttp implements AddLinkRepository {
 			
 		} catch (error) {
 			if (axios.isAxiosError<LinkError>(error)) {
-				return new LinkError(error.response?.data.message || error.message)
+				throw new LinkError(error.response?.data.message || error.message)
 			}
-			return new LinkError('Error parsing data')
+			throw new LinkError('Error parsing data')
 		}
 
 

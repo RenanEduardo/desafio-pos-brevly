@@ -9,7 +9,7 @@ export class GetLinkUseCase {
   this.getLinkRepository = getLinkRepository;
  }
 
- async execute(alias: string): Promise<GetLinkResponse | Error> {
+ async execute(alias: string): Promise<GetLinkResponse> {
    const response = await this.getLinkRepository.get(alias);
    return response;
  }

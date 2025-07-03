@@ -9,7 +9,7 @@ export class ExportLinksUseCase {
   this.exportLinksRepository = exportLinksRepository;
  }
 
- async execute(): Promise<ExportLinksResponse | Error> {
+ async execute(): Promise<ExportLinksResponse> {
    const response = await this.exportLinksRepository.export();
    return response;
  }

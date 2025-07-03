@@ -3,7 +3,7 @@ import { LinkError } from '../usecases/error'
 import { type ExportLinksResponse, ExportLinksResponseSchema } from '../usecases/interfaces'
 
 export interface ExportLinksRepository {
-	export(): Promise<ExportLinksResponse | LinkError>
+	export(): Promise<ExportLinksResponse>
 }
 
 export class ExportLinksRepositoryHttp implements ExportLinksRepository {
@@ -13,16 +13,16 @@ export class ExportLinksRepositoryHttp implements ExportLinksRepository {
 		this.baseUrl = baseUrl + this.path
 	}
 
-	async export(): Promise<ExportLinksResponse | LinkError> {
+	async export(): Promise<ExportLinksResponse> {
 		try {
 			const response = await axios.post(this.baseUrl)
 			const exportUrl  = ExportLinksResponseSchema.parse(response.data?.exportUrl)
 			return exportUrl
 		} catch (error) {
 			if (axios.isAxiosError<LinkError>(error)) {
-				return new LinkError(error.response?.data.message || error.message)
+				throw new LinkError(error.response?.data.message || error.message)
 			}
-			return new LinkError('Error parsing data')
+			throw new LinkError('Error parsing data')
 		}
 	}
 }

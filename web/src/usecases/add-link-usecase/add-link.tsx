@@ -1,5 +1,4 @@
 import type { AddLinkRepository } from '../../infra/add-link-repository-http'
-import { LinkError } from '../error'
 import type { Link, ShortLink } from '../interfaces'
 
 export class AddLinkUseCase {
@@ -9,11 +8,9 @@ export class AddLinkUseCase {
 		this.addLinkRepository = addLinkRepository
 	}
 
-	async execute(link: Link): Promise<ShortLink | LinkError> {
+	async execute(link: Link): Promise<ShortLink> {
 		const response = await this.addLinkRepository.add(link)
-		if (response instanceof LinkError) {
-			return response
-		}
+
 		return {
 			id: response.id,
 			originalUrl: link.url,

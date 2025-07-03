@@ -1,5 +1,5 @@
-import { DownloadIcon } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
+import { DownloadIcon, SpinnerIcon } from '@phosphor-icons/react'
+import { useEffect } from 'react'
 import { ExportLinksRepositoryHttp } from '../../infra/export-links-repository-http'
 import { ListLinksRepositoryHttp } from '../../infra/list-links-repository-http'
 import { useLinksStore } from '../../store/links'
@@ -11,8 +11,8 @@ import { EmptyList } from './components/empty-list'
 import { ListItem } from './components/list-item'
 
 export function LinksList() {
-	const { baseUrl, setLinks, links, setToast, setToastOpen } = useLinksStore((state) => state)
-	const [isLoading, setIsLoading] = useState(false)
+	const { baseUrl, setLinks, links, setToast, setToastOpen, setIsLoading, isLoading } =
+		useLinksStore((state) => state)
 
 	useEffect(() => {
 		async function fetchLinks() {
@@ -26,28 +26,36 @@ export function LinksList() {
 			} catch (error) {
 				setLinks([])
 				setIsLoading(false)
-
-				console.error('Error fetching links:', error)
+				setToast({
+					title: 'Error',
+					message: error instanceof Error ? error.message : 'Failed to fetch links',
+					type: 'error',
+					isOpen: false,
+				})
+				setToastOpen(true)
 			}
 		}
 
 		fetchLinks()
-	}, [baseUrl, setLinks])
+	}, [baseUrl, setLinks, setToast, setToastOpen, setIsLoading])
 
 	async function handleDownloadCSV() {
-		const response = await new ExportLinksUseCase(
-			new ExportLinksRepositoryHttp(baseUrl)
-		).execute()
-		if (response instanceof Error) {
-			setToast({
-				title: 'Error',
-				message: response.message,
-				type: 'error',
-				isOpen: false,
-			})
-			setToastOpen(true)
-		} else {
-			await downloadUrl(response)
+		try {
+			const fileUrl = await new ExportLinksUseCase(
+				new ExportLinksRepositoryHttp(baseUrl)
+			).execute()
+
+			await downloadUrl(fileUrl)
+		} catch (error) {
+			if (error instanceof Error) {
+				setToast({
+					title: 'Error',
+					message: error.message,
+					type: 'error',
+					isOpen: false,
+				})
+				setToastOpen(true)
+			}
 		}
 	}
 
@@ -60,8 +68,14 @@ export function LinksList() {
 					Baixar CSV
 				</Button>
 			</div>
-			{links.length === 0 ? (
-				<EmptyList isLoading={isLoading} />
+
+			{isLoading ? (
+				<div className="flex flex-col items-center justify-center gap-3 pt-8 pb-6 border-t border-gray-200">
+					<SpinnerIcon size={32} className="text-gray-400 animate-spin" />
+					<span className="text-gray-400">Carregando</span>
+				</div>
+			) : links.length === 0 ? (
+				<EmptyList />
 			) : (
 				<div className="max-h-[23rem] overflow-auto scrollbar scrollbar-thumb-blue-base scrollbar-track-gray-100">
 					{links.map((link) => (

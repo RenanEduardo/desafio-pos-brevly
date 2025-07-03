@@ -3,7 +3,7 @@ import axios from 'axios'
 import { LinkError } from '../usecases/error'
 
 export interface UpdateAccessCountRepository {
- update(alias: string): Promise<void | LinkError>
+ update(alias: string): Promise<void>
 }
 
 export class UpdateAccessCountRepositoryHttp implements UpdateAccessCountRepository {
@@ -13,14 +13,14 @@ export class UpdateAccessCountRepositoryHttp implements UpdateAccessCountReposit
 		this.baseUrl = baseUrl
 	}
 
-	async update(alias: string): Promise<void | LinkError> {
+	async update(alias: string): Promise<void> {
 		try {
 			await axios.patch(`${this.baseUrl}/${alias}/access-count`)
 		} catch (error) {
 			if (axios.isAxiosError<LinkError>(error)) {
-				return new LinkError(error.response?.data.message || error.message)
+				throw new LinkError(error.response?.data.message || error.message)
 			}
-			return new LinkError('Error parsing data')
+			throw new LinkError('Error parsing data')
 		}
 	}
 }

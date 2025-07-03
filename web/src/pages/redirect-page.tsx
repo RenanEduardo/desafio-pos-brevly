@@ -3,41 +3,31 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import brevlyLogoIcon from '../../assets/Logo_Icon.svg'
 import { GetLinkRepositoryHttp } from '../infra/get-link-repository-http'
 import { useLinksStore } from '../store/links'
-import { LinkError, NotFoundError } from '../usecases/error'
 import { GetLinkUseCase } from '../usecases/get-link-usecase/get-link-usecase'
 
 export function RedirectPage() {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const [url, setUrl] = useState('#')
-	const { baseUrl, setToast, setToastOpen } = useLinksStore((state) => state)
+	const { baseUrl } = useLinksStore((state) => state)
 
 	useEffect(() => {
 		async function redirectToOriginalUrl() {
 			const alias = location.pathname.slice(1)
 
-			const originalUrl = await new GetLinkUseCase(
-				new GetLinkRepositoryHttp(baseUrl)
-			).execute(alias)
-			if (originalUrl instanceof NotFoundError) {
-				navigate('/404')
-			}
-			if (originalUrl instanceof LinkError) {
-				setToast({
-					title: 'Error',
-					message: 'Failed to get link. Please try again.',
-					type: 'error',
-					isOpen: false,
-				})
-				setToastOpen(true)
-			} else if (typeof originalUrl === 'string') {
+			try {
+				const originalUrl = await new GetLinkUseCase(
+					new GetLinkRepositoryHttp(baseUrl)
+				).execute(alias)
 				setUrl(originalUrl)
 				window.location.href = originalUrl
+			} catch (_error) {
+				navigate('/404')
 			}
 		}
 
 		redirectToOriginalUrl()
-	}, [baseUrl, navigate, setToast, setToastOpen, location.pathname])
+	}, [baseUrl, navigate, location.pathname])
 	return (
 		<div className="min-h-screen w-full mx-auto flex flex-col items-center justify-center px-3">
 			<div className="flex flex-col items-center justify-center py-16 px-12 gap-6 rounded-lg bg-gray-100 ">
