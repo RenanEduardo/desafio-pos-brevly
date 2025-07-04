@@ -3,7 +3,7 @@ import axios from 'axios'
 import { LinkError } from '../usecases/error'
 
 export interface DeleteLinkRepository {
-	delete(alias: string): Promise<void>
+	delete(id: string): Promise<void>
 }
 
 export class DeleteLinkRepositoryHttp implements DeleteLinkRepository {
@@ -12,9 +12,9 @@ export class DeleteLinkRepositoryHttp implements DeleteLinkRepository {
 		this.baseUrl = baseUrl
 	}
 
-	async delete(alias:string): Promise<void> {
+	async delete(id:string): Promise<void> {
 		try {
-			await axios.delete(`${this.baseUrl}/${alias}`)
+			await axios.delete(`${this.baseUrl}/${id}`)
 		} catch (error) {
 			if (axios.isAxiosError<LinkError>(error)) {
 				throw new LinkError(error.response?.data.message || error.message)

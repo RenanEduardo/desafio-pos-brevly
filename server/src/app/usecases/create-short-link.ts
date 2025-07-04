@@ -3,7 +3,6 @@ import { schema } from '@/infra/db/schema'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { AlreadyExistsError } from './errors'
-import { BREVLY_LINK } from '@/constants'
 
 const createLinkInput = z.object({
 	url: z.string().url(),
@@ -16,7 +15,7 @@ export async function createShortLink(
 	input: CreateLinkInput
 ): Promise<{ id: string, shortLink: string; accessCount: number } | AlreadyExistsError> {
 	const { url, alias } = createLinkInput.parse(input)
-	const shortLink = `${BREVLY_LINK}${alias}`
+	const shortLink = `${alias}`
 
 	const result = await db.query.shortlinks.findFirst({
 		where: eq(schema.shortlinks.shortenedUrl, shortLink),

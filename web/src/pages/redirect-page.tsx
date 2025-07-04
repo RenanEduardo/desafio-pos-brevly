@@ -1,25 +1,50 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import brevlyLogoIcon from '../../assets/Logo_Icon.svg'
 import { GetLinkRepositoryHttp } from '../infra/get-link-repository-http'
 import { useLinksStore } from '../store/links'
 import { GetLinkUseCase } from '../usecases/get-link-usecase/get-link-usecase'
+import { UpdateAccessCountUseCase } from '../usecases/update-access-count-usecase/update-access-count-usecase'
+import { UpdateAccessCountRepositoryHttp } from '../infra/update-access-count-repository-http'
 
 export function RedirectPage() {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const [url, setUrl] = useState('#')
-	const { baseUrl } = useLinksStore((state) => state)
+	const { baseUrl, setToast,setToastOpen } = useLinksStore((state) => state)
+	const hasExecuted = useRef(false)
+
+	async function increaseAccessCount(id:string) {
+		try {
+				await new UpdateAccessCountUseCase(
+				new UpdateAccessCountRepositoryHttp(baseUrl)
+			).execute(id)
+		} catch (_error) {
+			setToast({
+				title: 'Error',
+				message: 'Failed to update access count. Please try again.',
+				type: 'error',
+				isOpen: false,
+			})
+			setToastOpen(true)
+		}
+	}
 
 	useEffect(() => {
+
+		if(hasExecuted.current) return
+		hasExecuted.current = true
+		
 		async function redirectToOriginalUrl() {
 			const alias = location.pathname.slice(1)
 
 			try {
-				const originalUrl = await new GetLinkUseCase(
+				const {originalUrl, id} = await new GetLinkUseCase(
 					new GetLinkRepositoryHttp(baseUrl)
 				).execute(alias)
+
 				setUrl(originalUrl)
+				await increaseAccessCount(id)
 				window.location.href = originalUrl
 			} catch (_error) {
 				navigate('/404')
@@ -28,6 +53,8 @@ export function RedirectPage() {
 
 		redirectToOriginalUrl()
 	}, [baseUrl, navigate, location.pathname])
+
+
 	return (
 		<div className="min-h-screen w-full mx-auto flex flex-col items-center justify-center px-3">
 			<div className="flex flex-col items-center justify-center py-16 px-12 gap-6 rounded-lg bg-gray-100 ">

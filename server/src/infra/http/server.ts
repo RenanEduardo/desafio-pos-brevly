@@ -58,5 +58,5 @@ server.register(exportLinksRoute)
 server.register(healthRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
-	console.log('Server is running')
+	console.info('Server is running')
 })

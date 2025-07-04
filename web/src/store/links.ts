@@ -38,7 +38,7 @@ export const useLinksStore = create<StoreState & StoreActions>()(devtools((set) 
 			})),
 		updateLink: (shortlink, updatedLink) =>
 			set((state) => ({
-				links: state.links.map((link) =>
+				links: state.links.map((link) => 
 					link.shortLink === shortlink ? updatedLink : link
 				),
 			})),

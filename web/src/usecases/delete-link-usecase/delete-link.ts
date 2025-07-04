@@ -10,7 +10,7 @@ export class DeleteLinkUseCase {
   this.deleteLinkRepository = deleteLinkRepository;
  }
 
- async execute(alias: string): Promise<void> {
-   await this.deleteLinkRepository.delete(alias);
+ async execute(id: string): Promise<void> {
+   await this.deleteLinkRepository.delete(id);
  }
 }

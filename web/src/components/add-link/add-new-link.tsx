@@ -3,6 +3,7 @@ import { AddLinkRepositoryHttp } from '../../infra/add-link-repository-http'
 import { useLinksStore } from '../../store/links'
 import { AddLinkUseCase } from '../../usecases/add-link-usecase/add-link'
 import { LinkError } from '../../usecases/error'
+import { isAcceptableAlias, isAcceptableUrl } from '../../util'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 
@@ -27,10 +28,14 @@ export function AddNewLink() {
 		setIsLoading,
 	} = useLinksStore((state) => state)
 
-	function isValidInput(input: string): boolean {
-		if (input.trim() === '') return false
+	function isValidUrl(input: string): boolean {
 		if (input === '404') return false
-		return true
+		return isAcceptableUrl(input)
+	}
+
+	function isValidAlias(input: string): boolean {
+		if (input === '404') return false
+		return isAcceptableAlias(input)
 	}
 
 	function resetInputs() {
@@ -41,14 +46,14 @@ export function AddNewLink() {
 	}
 
 	async function handleAddLink() {
-		if (!isValidInput(originalLinkInput)) {
+		if (!isValidUrl(originalLinkInput)) {
 			setOriginalLinkError({
 				error: true,
-				message: 'O link encurtado não pode ser um valor inválido.',
+				message: 'O link original não pode ser um valor inválido.',
 			})
 			return
 		}
-		if (!isValidInput(aliasInput)) {
+		if (!isValidAlias(aliasInput)) {
 			setAliasError({
 				error: true,
 				message: 'O link encurtado não pode ser um valor inválido.',
@@ -76,7 +81,7 @@ export function AddNewLink() {
 		try {
 			const response = await new AddLinkUseCase(new AddLinkRepositoryHttp(baseUrl)).execute({
 				url,
-				alias: aliasInput,
+				alias: `${brevlyUrl}${aliasInput}`,
 			})
 			updateLink(response.shortLink, response)
 		} catch (error) {

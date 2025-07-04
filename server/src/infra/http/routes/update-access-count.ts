@@ -7,11 +7,11 @@ import { z } from "zod";
 
 
 export const updateAccessCountRoute: FastifyPluginAsyncZod = async (server) => {
- server.patch('/links/:shortlink/access-count', {
+ server.patch('/links/:id/access-count', {
   schema: {
    summary: 'Update access count for a short link',
    params: z.object({
-    shortlink: z.string().describe('The alias of the short link to update'),
+    id: z.string().describe('The alias of the short link to update'),
    }),
    response: {
     200: z.object({
@@ -22,13 +22,13 @@ export const updateAccessCountRoute: FastifyPluginAsyncZod = async (server) => {
    },
   }
  }, async (request, reply) => {
-  const { shortlink } = request.params;
+  const { id } = request.params;
 
-  if (!shortlink) {
-   return reply.status(400).send({ message: 'Short link alias is required' });
+  if (!id) {
+   return reply.status(400).send({ message: 'Short link id is required' });
   }
 
-  const result = await updateAccessCount(shortlink);
+  const result = await updateAccessCount(id);
   if (result instanceof NotFoundError) {
    return reply.status(404).send({ message: result.message });
 

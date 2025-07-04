@@ -3,22 +3,20 @@ import { schema } from "@/infra/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { NotFoundError } from "./errors";
-import { BREVLY_LINK } from "@/constants";
 
 
 const deleteShortLinkInput = z.string()
 type DeleteShortLinkInput = z.input<typeof deleteShortLinkInput>
 
-export async function deleteShortLink(alias: DeleteShortLinkInput): Promise<void> {
-  const shortLink = `${BREVLY_LINK}${alias}`
+export async function deleteShortLink(id: DeleteShortLinkInput): Promise<void> {
 
   const result = await db.query.shortlinks.findFirst({
-    where: eq(schema.shortlinks.shortenedUrl, shortLink),
+    where: eq(schema.shortlinks.id, id),
   })
 
   if (!result) {
-    throw new NotFoundError(`Short link ${shortLink} not found`)
+    throw new NotFoundError(`Short link ${id} not found`)
   }
 
-  await db.delete(schema.shortlinks).where(eq(schema.shortlinks.shortenedUrl, shortLink))
+  await db.delete(schema.shortlinks).where(eq(schema.shortlinks.id, id))
 }

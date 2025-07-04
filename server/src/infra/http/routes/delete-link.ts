@@ -7,12 +7,12 @@ import { z } from "zod";
 
 export const deleteLinkRoute: FastifyPluginAsyncZod = async (server) => {
  server.delete(
-  '/links/:shortlink',
+  '/links/:id',
   {
    schema: {
     summary: 'Delete a short link',
     params: z.object({
-     shortlink: z.string().describe('The alias of the short link to delete'),
+     id: z.string().describe('The id of the short link to delete'),
    }),
     response: {
      204: z.void().describe('Short link deleted successfully'),
@@ -22,13 +22,13 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async (server) => {
   },
   async (request, reply) => {
    const { params } = request
-   const { shortlink } = params;
+   const { id } = params;
    
-   if(!shortlink) {
-    return reply.status(400).send({ message: 'Short link alias is required' });
+   if(!id) {
+    return reply.status(400).send({ message: 'id is required' });
    }
    try {
-    await deleteShortLink(shortlink);
+    await deleteShortLink(id);
    } catch (error) {
      if(error instanceof NotFoundError) {
       return reply.status(404).send({ message: error.message });

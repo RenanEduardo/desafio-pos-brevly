@@ -32,9 +32,8 @@ export function ListItem({ link }: ShortLinkProps) {
 	async function handleDeleteLink() {
 		const linkCopy = { ...link }
 		removeLink(id)
-		const alias = extractAliasFromUrl(shortLink)
 		try {
-			await new DeleteLinkUseCase(new DeleteLinkRepositoryHttp(baseUrl)).execute(alias)
+			await new DeleteLinkUseCase(new DeleteLinkRepositoryHttp(baseUrl)).execute(id)
 		} catch (_error) {
 			setToast({
 				title: 'Error',
@@ -47,27 +46,12 @@ export function ListItem({ link }: ShortLinkProps) {
 		}
 	}
 
-	async function increaseAccessCount() {
-		try {
-			await new UpdateAccessCountUseCase(
-				new UpdateAccessCountRepositoryHttp(baseUrl)
-			).execute(extractAliasFromUrl(shortLink))
-		} catch (_error) {
-			setToast({
-				title: 'Error',
-				message: 'Failed to update access count. Please try again.',
-				type: 'error',
-				isOpen: false,
-			})
-			setToastOpen(true)
-		}
-	}
+
 
 	return (
 		<div className="flex justify-between border-t border-gray-200 py-4 gap-5">
 			<div className="flex flex-col gap-1 max-w-[130px] md:max-w-[275px]">
 				<Link
-					onClick={increaseAccessCount}
 					to={`/${extractAliasFromUrl(shortLink)}`}
 					className="text-md font-semibold text-blue-base truncate hover:underline"
 				>

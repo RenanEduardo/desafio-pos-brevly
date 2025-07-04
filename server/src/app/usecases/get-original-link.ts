@@ -1,25 +1,28 @@
 import { z } from "zod";
 import { NotFoundError } from "./errors";
 import { db } from "@/infra/db";
-import { eq } from "drizzle-orm";
-import { schema } from "@/infra/db/schema";
-import { BREVLY_LINK } from "@/constants";
 
 
 const getOriginalLinkInput = z.string()
-type GetOriginalLinkInput = z.input<typeof getOriginalLinkInput>
 
-export async function getOriginalLink(alias: GetOriginalLinkInput): Promise<string | NotFoundError> {
- const shortLink = `${BREVLY_LINK}${alias}`
+const getOriginalLinkOutput = z.object({
+  originalUrl: z.string().url().describe('The original URL for the short link'),
+  id: z.string().describe('The ID of the short link'),
+}).describe('Short link retrieved successfully')
+
+
+type GetOriginalLinkInput = z.input<typeof getOriginalLinkInput>
+type GetOriginalLinkOutput = z.output<typeof getOriginalLinkOutput>
+
+export async function getOriginalLink(alias: GetOriginalLinkInput): Promise<GetOriginalLinkOutput | NotFoundError> {
  
  const result = await db.query.shortlinks.findFirst({
-  where: eq(schema.shortlinks.shortenedUrl, shortLink)
+  where: (shortlinks, {like}) => like(shortlinks.shortenedUrl, `%/${alias}`),
  })
 
- console.log('getOriginalLink result:', result)
  if (!result) {
-  return new NotFoundError(`Short link ${shortLink} not found`)
+  return new NotFoundError(`Short link ${alias} not found`)
  }
 
- return result.originalUrl
+ return {originalUrl: result.originalUrl, id: result.id}
 }

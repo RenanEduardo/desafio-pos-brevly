@@ -8,7 +8,7 @@ export class UpdateAccessCountUseCase {
   this.updateAccessCountRepository = updateAccessCountRepository;
  }
 
- async execute(alias: string): Promise<void> {
-   await this.updateAccessCountRepository.update(alias);
+ async execute(id: string): Promise<void> {
+   await this.updateAccessCountRepository.update(id);
  }
 }

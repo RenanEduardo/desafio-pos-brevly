@@ -15,8 +15,8 @@ export class GetLinkRepositoryHttp implements GetLinkRepository {
 	async get(alias: string): Promise<GetLinkResponse> {
 		try {
 			const response = await axios.get(`${this.baseUrl}/${alias}`)
-			const originalUrl = GetLinkResponseSchema.parse(response.data?.originalUrl)
-			return originalUrl
+			const link = GetLinkResponseSchema.parse(response.data)
+			return link
 		} catch (error) {
 			if(	axios.isAxiosError(error)) {
 				if (error.response?.status === 404) {

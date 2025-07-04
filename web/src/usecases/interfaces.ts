@@ -38,6 +38,9 @@ export const ExportLinksResponseSchema = z.string().url();
 
 export type ExportLinksResponse = z.infer<typeof ExportLinksResponseSchema>;
 
-export const GetLinkResponseSchema = ExportLinksResponseSchema
+export const GetLinkResponseSchema = z.object({
+  originalUrl: z.string().url(),
+  id: z.string(),
+});
 
 export type GetLinkResponse = z.infer<typeof GetLinkResponseSchema>;
