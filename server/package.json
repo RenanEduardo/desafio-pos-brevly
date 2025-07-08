@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "build": "tsup src/infra/http/server.ts --format esm"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "@biomejs/biome": "^1.9.4",
     "@types/node": "^24.0.3",
     "drizzle-kit": "^0.31.1",
+    "tsup": "^8.5.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
